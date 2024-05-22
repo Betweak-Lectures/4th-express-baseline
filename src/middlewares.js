@@ -3,6 +3,7 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
 const createSession = require("express-session");
+const { authenticate, loginRequired } = require("./utils/auth");
 
 const sessionMiddleware = createSession({
   secret: process.env.SESSION_SECRET || "<my-secret>",
@@ -19,8 +20,10 @@ function useMiddlewares(app) {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
-  app.use(express.static(path.join(__dirname, "public")));
+  // app.use(express.static(path.join(__dirname, "public")));
   app.use(sessionMiddleware);
+  app.use(authenticate);
   return app;
 }
-module.exports = { useMiddlewares };
+exports.useMiddlewares = useMiddlewares;
+// module.exports = { useMiddlewares };

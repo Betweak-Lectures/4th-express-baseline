@@ -4,14 +4,17 @@ dotenv.config();
 const createError = require("http-errors");
 const express = require("express");
 const { useMiddlewares } = require("./middlewares");
-const { useRouters } = require("./routers");
+const apiRouter = require("./routes/api/apiRouter");
+const connectDB = require("./models/connect");
+
+connectDB();
 
 const app = express();
 // 미들웨어 등록
 useMiddlewares(app);
 
 // 라우터 등록
-useRouters(app);
+app.use("/api", apiRouter);
 
 // 404에러 처리
 app.use(function (req, res, next) {
